@@ -46,3 +46,4 @@ with mlflow.start_run():
     print(f"Accuracy: {accuracy:.4f}")
     print(f"ROC-AUC: {roc_auc:.4f}")
     joblib.dump(model, "models/model.pkl")
+    joblib.dump(scaler, "models/scaler.pkl")

@@ -3,3 +3,8 @@ scikit-learn
 dvc
 mlflow
 joblib
+fastapi
+uvicorn
+streamlit
+requests
+numpy
