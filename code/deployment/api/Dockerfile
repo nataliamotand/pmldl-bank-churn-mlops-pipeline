@@ -1,0 +1,14 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY code/deployment/api/requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY code/deployment/api/app.py .
+COPY models/model.pkl models/model.pkl
+COPY models/scaler.pkl models/scaler.pkl
+
+EXPOSE 8000
+
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]

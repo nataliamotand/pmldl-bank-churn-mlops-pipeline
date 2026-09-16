@@ -1,0 +1,26 @@
+services:
+  api:
+    build:
+      context: ../..
+      dockerfile: code/deployment/api/Dockerfile
+    container_name: churn-api
+    ports:
+      - "8000:8000"
+
+  app:
+    build:
+      context: ../..
+      dockerfile: code/deployment/app/Dockerfile
+    container_name: churn-app
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api
+
+  pipeline:
+    build:
+      context: ../..
+      dockerfile: code/deployment/pipeline/Dockerfile
+    container_name: churn-pipeline
+    environment:
+      - MLFLOW_TRACKING_URI=http://host.docker.internal:5000
