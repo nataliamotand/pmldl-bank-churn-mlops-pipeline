@@ -5,8 +5,10 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, roc_auc_score
 import joblib
+import os
 
-mlflow.set_tracking_uri("http://127.0.0.1:5000")
+mlflow_uri = os.environ.get("MLFLOW_TRACKING_URI", "http://127.0.0.1:5000")
+mlflow.set_tracking_uri(mlflow_uri)
 
 train_df = pd.read_csv("data/processed/train.csv")
 test_df = pd.read_csv("data/processed/test.csv")
