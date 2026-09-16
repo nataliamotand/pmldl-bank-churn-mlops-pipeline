@@ -2,9 +2,26 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import joblib
 import numpy as np
+import os
 
-model = joblib.load("models/model.pkl")
-scaler = joblib.load("models/scaler.pkl")
+MODEL_PATH = "models/model.pkl"
+SCALER_PATH = "models/scaler.pkl"
+
+model = None
+scaler = None
+model_last_modified = None
+
+def load_model_if_updated():
+    global model, scaler, model_last_modified
+    current_mtime = os.path.getmtime(MODEL_PATH)
+
+    if model_last_modified != current_mtime:
+        model = joblib.load(MODEL_PATH)
+        scaler = joblib.load(SCALER_PATH)
+        model_last_modified = current_mtime
+        print("Model reloaded from disk.")
+
+load_model_if_updated()
 
 app = FastAPI()
 
@@ -23,6 +40,8 @@ class ClientData(BaseModel):
 
 @app.post("/predict")
 def predict(data: ClientData):
+    load_model_if_updated()
+
     input_dict = data.model_dump()
     input_array = np.array([list(input_dict.values())])
 
